@@ -5,6 +5,7 @@ import { stateFavoritMovies } from "../stores/states/state-favorite-movies";
 import { includes, some, xorBy } from "lodash-es";
 import { OverlayCard } from "./OverlayCard";
 import { toggleEvent } from "../stores/selectors/toggle-event";
+import { ReactNode } from "react";
 
 export const CardContainer = styled.div`
   margin-bottom: 50px;
@@ -15,6 +16,7 @@ export const CardContainer = styled.div`
 
 const Card = styled.div<{ $isFavorite: boolean }>`
   padding: 5px;
+  transition: 0.3s;
   position: relative;
   font-size: 10px;
   color: #dedede;
@@ -57,7 +59,7 @@ const MovieInfo = styled.div`
   }
 `;
 
-export const MovieCard = (props: IResponseType) => {
+export const MovieCard = (props: IResponseType & { children?: ReactNode }) => {
   const { imdbID, Title, Poster, Year, Type } = props;
 
   const [selected, setSelected] = useRecoilState(toggleEvent);
@@ -82,6 +84,7 @@ export const MovieCard = (props: IResponseType) => {
   return (
     <>
       <Card
+        id={imdbID}
         $isFavorite={some(favorites, ["imdbID", imdbID])}
         onClick={handleOverlayToggle}
       >
