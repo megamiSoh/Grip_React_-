@@ -3,11 +3,13 @@ import styled from "styled-components";
 
 const FooterContainer = styled.div`
   position: fixed;
+  z-index: 99;
   background-color: #fff;
   bottom: 0;
   display: flex;
   justify-content: space-around;
   width: 100%;
+  max-width: 800px;
   border-top: 1px solid black;
   & > a {
     display: inline-block;

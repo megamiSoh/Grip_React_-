@@ -8,7 +8,7 @@ import { toggleEvent } from "../stores/selectors/toggle-event";
 import { ReactNode } from "react";
 
 export const CardContainer = styled.div`
-  margin-bottom: 50px;
+  padding-bottom: 50px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 3px;
@@ -29,13 +29,17 @@ const Card = styled.div<{ $isFavorite: boolean }>`
 `;
 
 const isFavoritStyle = css`
-  border: 3px solid #000;
-  background-color: #000;
+  background-color: #000000b5;
   color: #dedede;
   &::after {
     content: "⭐";
     position: absolute;
     font-size: 20px;
+    background-color: #d8d8d887;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
   }
 `;
 
@@ -74,6 +78,7 @@ export const MovieCard = (props: IResponseType & { children?: ReactNode }) => {
       e.stopPropagation();
       const parseInfo = JSON.parse(info);
       setSelected([imdbID]);
+
       return setFavorits((state) => xorBy(state, [parseInfo], "imdbID"));
     };
 

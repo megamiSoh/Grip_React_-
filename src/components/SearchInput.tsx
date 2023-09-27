@@ -1,4 +1,3 @@
-import { isEmpty } from "lodash-es";
 import React from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
@@ -10,6 +9,7 @@ const SearchInputContainer = styled.div`
   z-index: 999;
   position: sticky;
   top: 0;
+  padding: 10px;
   flex-direction: row;
   background-color: #fff;
   gap: 2px;
@@ -29,6 +29,12 @@ const Button = styled.button`
   border: 1px solid gray;
 `;
 
+const WaringMessage = styled.div`
+  font-size: 10px;
+  color: red;
+  padding: 0 0 0 10px;
+`;
+
 type SearchInputProps = {
   onKeywordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSearchClick: (e?: React.MouseEvent<HTMLButtonElement>) => void;
@@ -39,20 +45,40 @@ export const SearchInput = ({
   onSearchClick,
 }: SearchInputProps) => {
   const { type } = useSearchTypes();
+  const [warnMessage, setWarnMessage] = React.useState("");
   const keyword = useRecoilValue(stateSearchKeyword({ type }));
 
+  const handleSearchClick = () => {
+    const isEmptyKeywords = !keyword;
+    setWarnMessage(isEmptyKeywords ? "키워드를 입력해 주세요." : "");
+
+    if (isEmptyKeywords) {
+      return;
+    }
+    return onSearchClick();
+  };
+
   const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && !isEmpty(keyword)) {
+    if (e.key === "Enter") {
       e.stopPropagation();
       e.preventDefault();
-      return onSearchClick();
+      return handleSearchClick();
     }
   };
 
   return (
-    <SearchInputContainer>
-      <Input type="text" onChange={onKeywordChange} onKeyDown={activeEnter} />
-      <Button onClick={onSearchClick}>go</Button>
-    </SearchInputContainer>
+    <>
+      <SearchInputContainer>
+        <Input
+          type="text"
+          placeholder="검색어 입력"
+          onChange={onKeywordChange}
+          onKeyDown={activeEnter}
+          value={keyword}
+        />
+        <Button onClick={handleSearchClick}>검색</Button>
+      </SearchInputContainer>
+      <WaringMessage>{warnMessage}</WaringMessage>
+    </>
   );
 };
