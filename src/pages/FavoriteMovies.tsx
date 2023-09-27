@@ -42,6 +42,7 @@ export default function FavoriteMovies() {
       });
     }
   };
+
   const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
     handleSearchScroll();

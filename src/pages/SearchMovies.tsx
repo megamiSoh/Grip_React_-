@@ -8,6 +8,12 @@ import { searchDomainResult } from "../stores/selectors/search-domain-result";
 import { CardContainer, MovieCard } from "../components/MovieCard";
 import { useEffect, useRef } from "react";
 import useIntersectionObserver from "../hooks/useIntersectionObserver";
+import { styled } from "styled-components";
+import { Loading } from "../components/Loading";
+
+const NoResult = styled.div`
+  text-align: center;
+`;
 
 export default function SearchMovies() {
   const target = useRef(null);
@@ -22,7 +28,7 @@ export default function SearchMovies() {
     searchDomainResult({ type })
   );
 
-  const { mutate } = useMutation(
+  const { mutate, isLoading } = useMutation(
     (page = 1) => {
       return axios.get(
         `http://www.omdbapi.com/?apikey=92e32667&s=${encodeURIComponent(
@@ -36,14 +42,21 @@ export default function SearchMovies() {
         variables: number | null,
         context: unknown
       ) => {
-        console.log(`rolling back optimistic update with id `);
+        // 런타임 에러 화면으로 넘어가지 않게, 에러바운더리등의 처리는 추가하지 않음.
+        // 실제 에러가 들어와도, 검색 결과가 없음 화면이 유지되도록 하고, 콘솔로 해당 에러만 확인 할수 있도록 함
+        console.log(error.message);
       },
       onSuccess: (res: AxiosResponse["data"]) => {
+        const response =
+          res.data.Response === "False"
+            ? { Search: [], totalResults: 0 }
+            : res.data;
+
         return setSearchResult((state) => ({
           ...state,
           response: {
-            result: res.data.Search,
-            totalCount: res.data.totalResults,
+            result: response.Search,
+            totalCount: response.totalResults,
           },
         }));
       },
@@ -65,9 +78,7 @@ export default function SearchMovies() {
   };
 
   useEffect(() => {
-    if (currentPage === 1) {
-      observe(target.current);
-    }
+    observe(target.current);
 
     const accumulate = searchResult.response.result.length;
     const totalCount = searchResult.response.totalCount;
@@ -88,6 +99,13 @@ export default function SearchMovies() {
           <MovieCard key={item.imdbID} {...item} />
         ))}
       </CardContainer>
+
+      <Loading isLoading={isLoading} />
+
+      <NoResult>
+        {!searchResult.response.result.length ? "검색 결과가 없습니다." : null}
+      </NoResult>
+
       <div ref={target} style={{ width: "100%", height: 20 }} />
     </>
   );
