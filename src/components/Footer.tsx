@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 const FooterContainer = styled.div`
   position: fixed;
+  background-color: #fff;
   bottom: 0;
   display: flex;
   justify-content: space-around;
