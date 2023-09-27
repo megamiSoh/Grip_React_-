@@ -1,5 +1,5 @@
-import { useLocation } from "react-router-dom";
 import { styled } from "styled-components";
+import useSearchTypes from "../hooks/useSearchTypes";
 
 const HeaderContainer = styled.div`
   width: 100%;
@@ -10,13 +10,7 @@ const HeaderContainer = styled.div`
 `;
 
 export const Header = () => {
-  const { pathname } = useLocation();
-  const headerTitles: { [key: string]: string } = {
-    "/": "영화 검색",
-    "/favoriteMovies": "즐겨 찾기",
-  };
+  const { headerTitle } = useSearchTypes();
 
-  return (
-    <HeaderContainer>{headerTitles[pathname] ?? "영화 검색"}</HeaderContainer>
-  );
+  return <HeaderContainer>{headerTitle}</HeaderContainer>;
 };
