@@ -7,6 +7,7 @@ import { stateSearchKeyword } from "../stores/states";
 
 const SearchInputContainer = styled.div`
   display: flex;
+  z-index: 999;
   position: sticky;
   top: 0;
   flex-direction: row;

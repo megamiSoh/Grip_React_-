@@ -1,8 +1,10 @@
-import { styled } from "styled-components";
+import { css, styled } from "styled-components";
 import { IResponseType } from "../stores/interfaces";
 import { useRecoilState } from "recoil";
 import { stateFavoritMovies } from "../stores/states/state-favorite-movies";
-import { some, xorBy } from "lodash-es";
+import { includes, some, xorBy } from "lodash-es";
+import { OverlayCard } from "./OverlayCard";
+import { toggleEvent } from "../stores/selectors/toggle-event";
 
 export const CardContainer = styled.div`
   margin-bottom: 50px;
@@ -13,6 +15,7 @@ export const CardContainer = styled.div`
 
 const Card = styled.div<{ $isFavorite: boolean }>`
   padding: 5px;
+  position: relative;
   font-size: 10px;
   color: #dedede;
   border-radius: 5px;
@@ -20,10 +23,18 @@ const Card = styled.div<{ $isFavorite: boolean }>`
   flex-direction: column;
   justify-content: space-between;
 
-  ${(props) =>
-    props.$isFavorite
-      ? "border: 3px solid #000; background-color: #000; color: #dedede;"
-      : "color: #000"}
+  ${(props) => (props.$isFavorite ? isFavoritStyle : "color: #000")}
+`;
+
+const isFavoritStyle = css`
+  border: 3px solid #000;
+  background-color: #000;
+  color: #dedede;
+  &::after {
+    content: "⭐";
+    position: absolute;
+    font-size: 20px;
+  }
 `;
 
 const MovieImage = styled.div`
@@ -49,32 +60,45 @@ const MovieInfo = styled.div`
 export const MovieCard = (props: IResponseType) => {
   const { imdbID, Title, Poster, Year, Type } = props;
 
+  const [selected, setSelected] = useRecoilState(toggleEvent);
   const [favorites, setFavorits] = useRecoilState(stateFavoritMovies);
 
   const handleImgError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     return (e.currentTarget.src = "/images/noImage.jpg");
   };
 
-  const handleFavoritClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const info = e.currentTarget.getAttribute("data-value") ?? "";
-    const parseInfo = JSON.parse(info);
-    return setFavorits((state) => xorBy(state, [parseInfo], "imdbID"));
+  const handleFavoritClick =
+    (info: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      const parseInfo = JSON.parse(info);
+      setSelected([imdbID]);
+      return setFavorits((state) => xorBy(state, [parseInfo], "imdbID"));
+    };
+
+  const handleOverlayToggle = () => {
+    setSelected([imdbID]);
   };
 
   return (
-    <Card
-      data-value={JSON.stringify(props)}
-      onClick={handleFavoritClick}
-      $isFavorite={some(favorites, ["imdbID", imdbID])}
-    >
-      <MovieImage>
-        <img src={Poster} alt={Title} onError={handleImgError} />
-      </MovieImage>
+    <>
+      <Card
+        $isFavorite={some(favorites, ["imdbID", imdbID])}
+        onClick={handleOverlayToggle}
+      >
+        <OverlayCard
+          isShow={includes(selected, imdbID)}
+          onFavoritClick={handleFavoritClick(JSON.stringify(props))}
+          isFavorite={some(favorites, ["imdbID", imdbID])}
+        />
+        <MovieImage>
+          <img src={Poster} alt={Title} onError={handleImgError} />
+        </MovieImage>
 
-      <MovieInfo>
-        <h1>{Title}</h1>
-        {Year} - {Type}
-      </MovieInfo>
-    </Card>
+        <MovieInfo>
+          <h1>{Title}</h1>
+          {Year} - {Type}
+        </MovieInfo>
+      </Card>
+    </>
   );
 };

@@ -1,5 +1,5 @@
 import { ISearchResult } from "./../interfaces";
-import { selectorFamily, waitForAll } from "recoil";
+import { DefaultValue, selectorFamily, waitForAll } from "recoil";
 import { ISearchType } from "../interfaces";
 import { statePaging, stateSearchKeyword, stateSearchResult } from "../states";
 
@@ -26,7 +26,7 @@ export const searchDomainResult = selectorFamily<ISearchResult, ISearchType>({
     },
   set:
     (type) =>
-    ({ set, get }, newValue: any) => {
+    ({ set, get }, newValue) => {
       const { response, page } = get(
         waitForAll({
           response: stateSearchResult,
@@ -34,13 +34,18 @@ export const searchDomainResult = selectorFamily<ISearchResult, ISearchType>({
           keyword: stateSearchKeyword(type),
         })
       );
+      if (newValue instanceof DefaultValue) {
+        return;
+      }
       const mergedData =
-        page === 1 ? newValue.Search : [...response.result, ...newValue.Search];
+        page === 1
+          ? newValue.response.result
+          : [...response.result, ...newValue.response.result];
 
       return set(stateSearchResult, (prev) => {
         return {
           result: mergedData,
-          totalCount: newValue.totalResults,
+          totalCount: newValue.response.totalCount,
         };
       });
     },
