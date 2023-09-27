@@ -5,7 +5,6 @@ import styled from "styled-components";
 
 const LayoutContainer = styled.div`
   width: 100%;
-  overflow-x: hidden;
 `;
 
 export const Layout = () => {
