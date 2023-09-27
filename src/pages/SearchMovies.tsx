@@ -39,7 +39,13 @@ export default function SearchMovies() {
         console.log(`rolling back optimistic update with id `);
       },
       onSuccess: (res: AxiosResponse["data"]) => {
-        return setSearchResult(res.data);
+        return setSearchResult((state) => ({
+          ...state,
+          response: {
+            result: res.data.Search,
+            totalCount: res.data.totalResults,
+          },
+        }));
       },
     }
   );
@@ -59,7 +65,9 @@ export default function SearchMovies() {
   };
 
   useEffect(() => {
-    if (currentPage === 1) observe(target.current);
+    if (currentPage === 1) {
+      observe(target.current);
+    }
 
     const accumulate = searchResult.response.result.length;
     const totalCount = searchResult.response.totalCount;
@@ -70,7 +78,7 @@ export default function SearchMovies() {
   }, [currentPage, observe, searchResult.response, unobserve]);
 
   return (
-    <div>
+    <>
       <SearchInput
         onKeywordChange={handleKeywordChange}
         onSearchClick={handleSearchClick}
@@ -81,6 +89,6 @@ export default function SearchMovies() {
         ))}
       </CardContainer>
       <div ref={target} style={{ width: "100%", height: 20 }} />
-    </div>
+    </>
   );
 }
