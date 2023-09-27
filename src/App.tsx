@@ -1,5 +1,6 @@
 import React from "react";
 import "./App.css";
+import "the-new-css-reset/css/reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RecoilRoot } from "recoil";
 import Main from "./pages/Main";
