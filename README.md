@@ -31,5 +31,5 @@ Recoil은 처음 사용해보았는데, 꽤 재미있었다.
 
 클론하여 내려 받은 후,
 
-> npm install || npm i
-> npm run start || npm start
+1. npm install 또는 npm i
+2. npm run start 또는 npm start
