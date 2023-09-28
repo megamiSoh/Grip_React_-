@@ -9,15 +9,15 @@ const LoadingContainer = styled.div`
   height: 25px;
   border-radius: 50%;
   background: #ffffff;
-  background: -moz-linear-gradient(left, red 10%, rgba(255, 255, 255, 0) 42%);
+  background: -moz-linear-gradient(left, gray 10%, rgba(255, 255, 255, 0) 42%);
   background: -webkit-linear-gradient(
     left,
-    red 10%,
+    gray 10%,
     rgba(255, 255, 255, 0) 42%
   );
-  background: -o-linear-gradient(left, red 10%, rgba(255, 255, 255, 0) 42%);
-  background: -ms-linear-gradient(left, red 10%, rgba(255, 255, 255, 0) 42%);
-  background: linear-gradient(to right, red 10%, rgba(255, 255, 255, 0) 42%);
+  background: -o-linear-gradient(left, gray 10%, rgba(255, 255, 255, 0) 42%);
+  background: -ms-linear-gradient(left, gray 10%, rgba(255, 255, 255, 0) 42%);
+  background: linear-gradient(to right, gray 10%, rgba(255, 255, 255, 0) 42%);
   position: relative;
   -webkit-animation: spinner 1.4s infinite linear;
   animation: spinner 1.4s infinite linear;
@@ -28,7 +28,7 @@ const LoadingContainer = styled.div`
   &::before {
     width: 50%;
     height: 50%;
-    background: red;
+    background: gray;
     border-radius: 100% 0 0 0;
     position: absolute;
     top: 0;
