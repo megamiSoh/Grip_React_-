@@ -1,6 +1,30 @@
-# Getting Started with Create React App
+# React with Typescript
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+기본 구성 [Create React App](https://github.com/facebook/create-react-app).
+- React-Query, Recoil, Styled-component, localforage, lodash
+
+## 기본 컨셉
+Directory Architecture 심플하게 pages, components, hooks, stores로 구성하였습니다.
+도메인 로직은 pages안에서만 핸들링하게끔 하였습니다.
+
+비동기 도메인 상태는 React-Query를 컴포넌트 간의 상태 관리는 Recoil을 사용하였습니다.
+
+
+## 느낀 점
+Recoil은 처음 사용해보았는데, 꽤 재미있었다. 
+다만, 처음 사용한지라 여러모로 익숙치 않고 제대로 사용하고 있는건지 확인할 시간이 부족해서 좀 아쉬웠다.
+즐겨찾기 데이터는 컬렉션 형식의 데이터라 localforage를 처음 써보았는데 정말 쉽고 편했다.
+일전에 mdn 순정 indexedDB썼을때는 생각처럼 핸들링이 되지 않아 고생했던 기억이 있는데, localforage는 localstorage와 usage가 거의 동일해서 정말 편하게 사용했다.
+
+
+
+## 그 외,
+즐겨찾기 정렬은 터치 이벤트로 구현되어, 모바일 시뮬레이터로 확인해야 합니다.
+참고 부탁드리겠습니다!
+
+
+
+
 
 ## Available Scripts
 
@@ -13,34 +37,3 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
