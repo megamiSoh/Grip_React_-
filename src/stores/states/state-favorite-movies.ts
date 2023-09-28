@@ -2,14 +2,14 @@ import localforage from "localforage";
 import { AtomEffect, atom } from "recoil";
 import { IResponseType } from "../interfaces";
 
-const localForageEffect: <T>(key: string) => AtomEffect<T> =
+const localForageEffect: (key: string) => AtomEffect<IResponseType[]> =
   (key: string) =>
   ({ setSelf, onSet, trigger }) => {
     const loadPersisted = async () => {
-      const savedValue = (await localforage.getItem(key)) as string;
+      const savedValue = (await localforage.getItem(key)) as IResponseType[];
 
       if (savedValue !== null) {
-        setSelf(JSON.parse(savedValue));
+        setSelf(savedValue);
       }
     };
 
@@ -20,7 +20,7 @@ const localForageEffect: <T>(key: string) => AtomEffect<T> =
     onSet((newValue, _, isReset) => {
       return isReset
         ? localforage.removeItem(key)
-        : localforage.setItem(key, JSON.stringify(newValue));
+        : localforage.setItem(key, newValue);
     });
   };
 

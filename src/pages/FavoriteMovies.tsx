@@ -65,6 +65,7 @@ export default function FavoriteMovies() {
 
   const handleSortableClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    document.body.style.overflow = !isSortable ? "hidden" : "unset";
     setIsSortable((state) => !state);
   };
 
@@ -78,7 +79,7 @@ export default function FavoriteMovies() {
       // findIndex helper 함수
       const find = (id: string) =>
         findIndex(favorites, function (o) {
-          return o.imdbID === id;
+          return o?.imdbID === id;
         });
 
       // 타겟 ID 추출
@@ -97,14 +98,16 @@ export default function FavoriteMovies() {
         case "touchstart":
           // 복제한 노드에 새로운 ID값을 부여한다.
           (cloneNode as Element).id = "cloneNode";
-          // 터치 이벤트 중에는 스크롤 방지
-          document.body.style.overflow = "hidden";
+
           // 바디에 복사한 노드를 추가한다.
           document.body.appendChild(cloneNode);
 
           break;
 
         case "touchend":
+          // 복제된 노드 삭제
+          document.getElementById("cloneNode")?.remove();
+
           // 터치 엔드가 되는 시점의 타겟 노드를 찾아 메모리에 저장한다.
           const changedTouch = e.changedTouches[0];
           const replaceTarget = document.elementFromPoint(
@@ -112,15 +115,14 @@ export default function FavoriteMovies() {
             changedTouch.clientY
           ) as Element & { offsetParent: { id: string } };
 
-          // 스크롤 방지 해제
-          document.body.style.overflow = "unset";
-
-          // 복제된 노드 삭제
-          document.getElementById("cloneNode")?.remove();
+          // 치환할 대상이 없으면 함수를 빠져나간다.
+          if (!replaceTarget) return;
 
           // 요소 각각의 인덱스 값으로 치환해준다.
-          const replaceIdx = find(replaceTarget.offsetParent.id);
+          const replaceIdx = find(replaceTarget?.offsetParent?.id ?? targetId);
           const selectedIdx = find(targetId);
+
+          if (replaceIdx < 0) return;
 
           // 스토어에 저장된 즐겨찾기 데이터를 딥카피하여 메모리에 할당한다.
           const copied = [...favorites];
@@ -140,6 +142,7 @@ export default function FavoriteMovies() {
 
           // 마우스의 현재 좌표
           const clientRect = root.getBoundingClientRect();
+
           const xPos = e.touches[0].clientX - clientRect.left;
           const yPos = e.touches[0].clientY - clientRect.top;
 
@@ -148,7 +151,9 @@ export default function FavoriteMovies() {
           width: 100px;
           height: 100px;
           color: transparent;
-          left: ${xPos}px;
+          left: ${
+            xPos > clientRect.width - 110 ? clientRect.width - 110 : xPos
+          }px;
           top: ${yPos}px;
           transition: 0s;
           `;
@@ -174,7 +179,7 @@ export default function FavoriteMovies() {
         onTouchMove={touchEvent}
       >
         {favorites.map((item) => (
-          <MovieCard {...item} key={item.imdbID} />
+          <MovieCard {...item} key={item?.imdbID} />
         ))}
       </CardContainer>
     </>
