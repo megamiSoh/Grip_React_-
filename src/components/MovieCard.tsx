@@ -6,15 +6,16 @@ import { includes, some, xorBy } from "lodash-es";
 import { OverlayCard } from "./OverlayCard";
 import { toggleEvent } from "../stores/selectors/toggle-event";
 import { ReactNode } from "react";
+import React from "react";
 
-export const CardContainer = styled.div`
+export const CardContainer = styled.ul`
   padding-bottom: 50px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 3px;
 `;
 
-const Card = styled.div<{ $isFavorite: boolean }>`
+const Card = styled.li<{ $isFavorite: boolean }>`
   padding: 5px;
   transition: 0.3s;
   position: relative;
@@ -35,8 +36,6 @@ const isFavoritStyle = css`
     content: "⭐";
     position: absolute;
     font-size: 20px;
-    background-color: #d8d8d887;
-    border-radius: 50%;
     width: 30px;
     height: 30px;
     text-align: center;
@@ -47,9 +46,10 @@ const MovieImage = styled.div`
   height: 100%;
   display: flex;
   background-color: #dedede;
-
+  display: flex;
+  justify-content: center;
   & > img {
-    width: 100%;
+    width: 60%;
     object-fit: cover;
   }
 `;
